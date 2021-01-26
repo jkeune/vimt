@@ -17,8 +17,10 @@ Downloaded as annual files with monthly values.
 ## VIMT plot
 ```bash
 Rcsript plot_vimt.r
-```#
+```
+
 This script also uses coastline data (ne_coastlines_10m shapefiles from http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_coastline.zip), downloadable with R as
+
 ```bash
 download.file("http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_coastline.zip", destfile = 'coastlines.zip')
 ```

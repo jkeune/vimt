@@ -4,15 +4,20 @@ library(fields)
 require(utils)
 require(rasterVis)
 library(rgdal)
-source("/data/gent/vo/000/gvo00090/vsc42383/tools/flexpart/projects/wsrecycling/000_misc/coastlines.r")
+
+
+# Download coastlines and unzip
+download.file("http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_coastline.zip", destfile = 'coastlines.zip')
+system("unzip coastlines.zip")
+coastlines = readOGR("coastlines/",layer="ne_10m_coastline")
 
 # READ WIND DATA
-ncfile	= nc_open("/scratch/gent/vo/000/gvo00090/vsc42383/eradata/vimt_monthly/umean.nc")
+ncfile	= nc_open("umean.nc")
 wlon    = ncvar_get(ncfile,"longitude")
 wlon[which(wlon>180)]=wlon[which(wlon>180)]-360
 wlat    = (ncvar_get(ncfile,"latitude"))
 u	= as.array(ncvar_get(ncfile,"p71.162"))	# u-wind
-ncfile	= nc_open("/scratch/gent/vo/000/gvo00090/vsc42383/eradata/vimt_monthly/vmean.nc")
+ncfile	= nc_open("vmean.nc")
 v	= as.array(ncvar_get(ncfile,"p72.162"))	# v-wind
 u	= raster(t(u))#raster(t(u)[ncol(u):1, ])
 v 	= raster(t(v))#raster(t(v)[ncol(v):1, ])
@@ -29,7 +34,7 @@ extent(w) <- c(min(wlon), max(wlon), min(wlat), max(wlat))
 slope <- sqrt(w[[1]]^2 + w[[2]]^2)
 aspect <- atan2(w[[1]], w[[2]])
 
-ncfile	= nc_open("/scratch/gent/vo/000/gvo00090/vsc42383/eradata/vimt_monthly/vimtdmean_summer_box.nc")
+ncfile	= nc_open("vimtdmean_summer_box.nc")
 vimtd	= as.array(ncvar_get(ncfile,"p84.162"))#*86400 #to get mm/d
 vimtd	= raster(t(vimtd))#raster(t(vimtd)[ncol(vimtd):1,])
 #projection(vimtd) <- CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")#CRS("+init=ellps:WGS84")
